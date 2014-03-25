@@ -8,18 +8,30 @@
 
 'use strict';
 
+var jstransform = require('jstransform');
+var util = require('util');
+var chalk = require('chalk');
+var async = require('async');
+
+
 module.exports = function(grunt) {
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('jstransform', 'Grunt task for transpiling ES6 --> ES5 using Facebook's jstransform', function() {
+  grunt.registerMultiTask('jstransform', 'Grunt task for transpiling ES6 --> ES5 using Facebook\'s jstransform', function() {
     // Merge task-specific and/or target-specific options with these defaults.
+    var visitors = [];
     var options = this.options({
-      punctuation: '.',
-      separator: ', '
+      separator: ';'
     });
 
+    visitors = options.visitors.reduce(function(prev, current){
+      var list = getVisitorList(current);
+      return prev.concat(list);
+    }, []);
+
+    console.log('visitors --->', visitors);
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
       // Concat specified files.
@@ -33,11 +45,13 @@ module.exports = function(grunt) {
         }
       }).map(function(filepath) {
         // Read file source.
-        return grunt.file.read(filepath);
+        var originalFile = grunt.file.read(filepath);
+        var transformedFileData = jstransform.transform(
+          visitors,
+          originalFile
+        );
+        return transformedFileData.code;
       }).join(grunt.util.normalizelf(options.separator));
-
-      // Handle options.
-      src += options.punctuation;
 
       // Write the destination file.
       grunt.file.write(f.dest, src);
@@ -47,4 +61,19 @@ module.exports = function(grunt) {
     });
   });
 
+  function getVisitorList(visitorType) {
+    var modulePath = util.format('jstransform/visitors/es6-%s-visitors', visitorType);
+    var visitorModule = require(modulePath);
+    var visitors = null;
+
+    if (!visitorModule) {
+      grunt.fail.warn('module "' + module +'" doesn\'t exist');
+    } else if(!visitorModule.visitorList || !visitorModule.visitorList.length) {
+      grunt.fail.warn('module "' + module +'" has no visitors');
+    } else {
+      visitors = visitorModule.visitorList;
+    }
+
+    return visitors;
+  }
 };
