@@ -30,28 +30,22 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     jstransform: {
-      default_options: {
+      classVisitors: {
         options: {
+          visitors: ['class', 'arrow-function']
         },
         files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
+          'tmp/parentClass.js': ['test/fixtures/parentClass.js'],
+          'tmp/childClass.js': ['test/fixtures/childClass.js'],
+          'tmp/arrowFunction.js': ['test/fixtures/arrowFunction.js']
+        }
+      }
     },
 
     // Unit tests.
     nodeunit: {
       tests: ['test/*_test.js'],
-    },
+    }
 
   });
 
@@ -59,6 +53,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-jstransform');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
