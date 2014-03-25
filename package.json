@@ -37,5 +37,10 @@
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "dependencies": {
+    "jstransform": "~3.0.0",
+    "chalk": "~0.4.0",
+    "async": "~0.2.10"
+  }
 }
