@@ -1,7 +1,7 @@
 {
   "name": "grunt-jstransform",
   "description": "Grunt task for transpiling ES6 --> ES5 using Facebook's jstransform",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "homepage": "https://github.com/heftybyte/grunt-jstransform",
   "author": {
     "name": "Esco Obong",
