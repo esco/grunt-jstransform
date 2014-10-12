@@ -37,7 +37,7 @@
     "grunt": "~0.4.4"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin, jstransform, grunt, es6, transpile"
   ],
   "dependencies": {
     "chalk": "~0.4.0",
